@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiActivity, FiMail, FiLock, FiAlertCircle, FiKey } from 'react-icons/fi';
+import { FiActivity, FiMail, FiLock, FiAlertCircle } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
@@ -56,12 +56,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleFillDemo = (demoEmail, demoPassword) => {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-    setError('');
-  };
-
   return (
     <div className="min-h-screen bg-ocean-bg flex flex-col justify-center items-center p-4 relative overflow-hidden">
       {/* Decorative Background Elements */}
@@ -83,26 +77,6 @@ export default function LoginPage() {
             <p className="text-sm text-slate-500 mt-1 text-center">
               Multi-Modal Deep Learning Platform for Real-Time Ocean State Estimation
             </p>
-          </div>
-
-          {/* Demo account quick fill */}
-          <div className="mb-5 p-3 rounded-xl bg-ocean-card/60 border border-ocean-border/80 flex flex-col gap-1.5 text-xs text-slate-500">
-            <div className="flex items-center justify-between font-semibold text-ocean-text">
-              <span className="flex items-center gap-1.5">
-                <FiKey className="w-3.5 h-3.5 text-ocean-primary" /> Admin Demo Account
-              </span>
-              <button
-                type="button"
-                onClick={() => handleFillDemo('karuppuduraikece@gmail.com', 'admin')}
-                className="text-[11px] font-bold text-ocean-primary hover:underline"
-              >
-                Auto-fill
-              </button>
-            </div>
-            <div className="flex justify-between text-[11px] text-slate-400">
-              <span>karuppuduraikece@gmail.com</span>
-              <span className="font-mono">pass: admin</span>
-            </div>
           </div>
 
           {error && (

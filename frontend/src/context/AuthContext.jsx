@@ -267,8 +267,54 @@ export function AuthProvider({ children }) {
   /**
    * Update a user's role (Admin only).
    */
+  /**
+   * Edit user details (name, email, role) - Admin only.
+   */
+  const updateUser = async (userId, updatedFields) => {
+    if (user?.role !== 'admin') return { success: false, error: 'Admin access required' };
+    if (!userId) return { success: false, error: 'Missing user ID' };
+    const activeToken = user?.token || localStorage.getItem('oceanfusion_token');
+
+    try {
+      const res = await safeFetch(`${API_BASE}/auth/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${activeToken}`,
+        },
+        body: JSON.stringify(updatedFields),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success && data.user) {
+        setAllUsers((prev) =>
+          prev.map((u) => {
+            const uid = (u._id || u.id)?.toString();
+            return uid === userId.toString() ? { ...u, ...data.user } : u;
+          })
+        );
+        return { success: true, user: data.user };
+      }
+      return { success: false, error: data?.error || 'Failed to update user' };
+    } catch (err) {
+      console.warn('[Auth] Update user error:', err.message);
+      // Local state update fallback
+      setAllUsers((prev) =>
+        prev.map((u) => {
+          const uid = (u._id || u.id)?.toString();
+          return uid === userId.toString() ? { ...u, ...updatedFields } : u;
+        })
+      );
+      return { success: true };
+    }
+  };
+
+  /**
+   * Update a user's role (Admin only).
+   */
   const updateUserRole = async (userId, newRole) => {
-    if (user?.role !== 'admin') return;
+    if (user?.role !== 'admin') return { success: false, error: 'Admin access required' };
+    if (!userId) return { success: false, error: 'Missing user ID' };
     const activeToken = user?.token || localStorage.getItem('oceanfusion_token');
 
     try {
@@ -284,26 +330,32 @@ export function AuthProvider({ children }) {
       const data = await res.json();
       if (res.ok && data.success) {
         setAllUsers((prev) =>
-          prev.map((u) => (u._id === userId || u.id === userId ? { ...u, role: newRole } : u))
+          prev.map((u) => {
+            const uid = (u._id || u.id)?.toString();
+            return uid === userId.toString() ? { ...u, role: newRole } : u;
+          })
         );
         return { success: true };
       }
+      return { success: false, error: data?.error || 'Failed to update role' };
     } catch (err) {
       console.warn('[Auth] Update role backend error:', err.message);
+      setAllUsers((prev) =>
+        prev.map((u) => {
+          const uid = (u._id || u.id)?.toString();
+          return uid === userId.toString() ? { ...u, role: newRole } : u;
+        })
+      );
+      return { success: true };
     }
-
-    // Local fallback
-    setAllUsers((prev) =>
-      prev.map((u) => (u._id === userId || u.id === userId ? { ...u, role: newRole } : u))
-    );
-    return { success: true };
   };
 
   /**
    * Delete a user (Admin only).
    */
   const deleteUser = async (userId) => {
-    if (user?.role !== 'admin') return;
+    if (user?.role !== 'admin') return { success: false, error: 'Admin access required' };
+    if (!userId) return { success: false, error: 'Missing user ID' };
     const activeToken = user?.token || localStorage.getItem('oceanfusion_token');
 
     try {
@@ -316,15 +368,19 @@ export function AuthProvider({ children }) {
 
       const data = await res.json();
       if (res.ok && data.success) {
-        setAllUsers((prev) => prev.filter((u) => u._id !== userId && u.id !== userId));
+        setAllUsers((prev) =>
+          prev.filter((u) => {
+            const uid = (u._id || u.id)?.toString();
+            return uid && uid !== userId.toString();
+          })
+        );
         return { success: true };
       }
+      return { success: false, error: data?.error || 'Failed to delete user' };
     } catch (err) {
       console.warn('[Auth] Delete user backend error:', err.message);
+      return { success: false, error: 'Connection error while deleting user' };
     }
-
-    setAllUsers((prev) => prev.filter((u) => u._id !== userId && u.id !== userId));
-    return { success: true };
   };
 
   const value = {
@@ -338,6 +394,7 @@ export function AuthProvider({ children }) {
     updateUserProfile,
     updateProfile: updateUserProfile,
     updateUserRole,
+    updateUser,
     deleteUser,
   };
 

@@ -284,6 +284,45 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+/**
+ * Edit user details (Admin only).
+ * Endpoint: PUT /api/auth/users/:id
+ */
+const updateUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name, email, role } = req.body;
+
+    const updates = {};
+    if (name) updates.name = name.trim();
+    if (email) updates.email = email.toLowerCase().trim();
+    if (role && ['admin', 'researcher', 'coast_guard', 'user'].includes(role)) {
+      updates.role = role;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found.',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'User updated successfully',
+      user: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -291,5 +330,6 @@ module.exports = {
   getMe,
   getAllUsers,
   updateUserRole,
+  updateUser,
   deleteUser,
 };
