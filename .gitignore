@@ -1,0 +1,54 @@
+# Root .gitignore for OceanFusion Monorepo
+
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment configurations (Credentials & Secrets)
+.env
+.env.*
+*.local
+!.env.example
+!*/.env.example
+
+# Build outputs
+dist/
+*/dist/
+build/
+*/build/
+
+# Logs & temp files
+*.log
+npm-debug.log*
+yarn-debug.log*
+uploads/*
+!*/uploads/.gitkeep
+tmp/
+temp/
+
+# Python & AI Models
+__pycache__/
+*/__pycache__/
+*.py[cod]
+venv/
+.venv/
+*/venv/
+*/.venv/
+.ipynb_checkpoints
+*.h5
+*.keras
+
+# Vite cache
+.vite/
+*/.vite/
+
+# IDE & OS metadata
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Separate AI repository
+oceanfusion-ai/
+

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/ocean-logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="OceanFusion AI - Multi-Modal Deep Learning Platform for Real-Time Ocean State Estimation, Sea Surface Temperature, Wave Height, Cyclone Forecasting, and Early Warning." />
+    <meta name="keywords" content="Oceanography, Deep Learning, CNN, XGBoost, SST, Wave Height, Cyclone Tracking, INCOIS, NOAA, Copernicus, NASA Earthdata" />
+    <title>OceanFusion AI — Real-Time Ocean State Estimation & Forecasting</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=sunny,bedtime" />
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!-- Theme pre-hydration script (default light) -->
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('oceanfusion_theme');
+          if (saved === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <!-- Google Identity Services (GIS / GSI) for Real Google OAuth -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+  <body class="bg-ocean-bg text-ocean-text font-sans antialiased selection:bg-ocean-teal selection:text-white transition-colors duration-300 min-h-screen overflow-x-hidden">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
